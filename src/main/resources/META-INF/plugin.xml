@@ -1,0 +1,99 @@
+<idea-plugin>
+    <id>com.kamini.latency-budget-analyzer</id>
+    <name>Latency Budget Analyzer</name>
+    <vendor email="kamini@tech-s.org" url="https://www.kamini-kamal.com">
+        Kamini Kamal
+    </vendor>
+
+    <category>Code Analysis</category>
+
+    <description><![CDATA[
+        <h3>AI-Powered Latency Budget Analyzer</h3>
+        <p>
+            Analyzes your Java/Spring Boot methods for latency hotspots — detecting HTTP calls,
+            database queries, Kafka publishes, Redis operations, and blocking patterns.
+            Provides estimated latency budgets (min/max/p99) per call type and uses AI
+            to suggest concrete optimizations like async conversions, caching strategies,
+            and parallel execution.
+        </p>
+        <h4>Features:</h4>
+        <ul>
+            <li>PSI-based static analysis of call chains in Java/Kotlin methods</li>
+            <li>Per-operation latency estimates (HTTP, DB, Kafka, Redis, Thread.sleep)</li>
+            <li>Hotspot detection (calls consuming >20% of total p99 budget)</li>
+            <li>Blocking call detection (synchronous operations that should be async)</li>
+            <li>AI-powered optimization suggestions via Claude API</li>
+            <li>Interactive results panel with sortable call chain table</li>
+        </ul>
+        <h4>Usage:</h4>
+        <p>
+            Right-click inside any Java/Kotlin method → <b>Analyze Latency Budget</b>
+        </p>
+    ]]></description>
+
+    <change-notes><![CDATA[
+        <b>1.0.0</b>
+        <ul>
+            <li>Initial release</li>
+            <li>Support for HTTP, DB, Kafka, Redis, and Thread.sleep detection</li>
+            <li>AI-powered suggestions via Claude API</li>
+            <li>Interactive latency breakdown panel</li>
+        </ul>
+    ]]></change-notes>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+
+        <!-- Tool Window -->
+        <toolWindow
+                id="Latency Analyzer"
+                secondary="false"
+                icon="AllIcons.Actions.ProfileCPU"
+                anchor="right"
+                factoryClass="com.kamini.latencyanalyzer.toolwindow.LatencyToolWindowFactory"/>
+
+        <!-- Application-level settings storage -->
+        <applicationService
+                serviceImplementation="com.kamini.latencyanalyzer.settings.PluginSettings"/>
+
+        <!-- Project-level analysis service -->
+        <projectService
+                serviceImplementation="com.kamini.latencyanalyzer.services.LatencyAnalyzerService"/>
+
+        <!-- Settings page under Tools -->
+        <applicationConfigurable
+                parentId="tools"
+                instance="com.kamini.latencyanalyzer.settings.PluginSettingsConfigurable"
+                id="com.kamini.latencyanalyzer.settings"
+                displayName="Latency Budget Analyzer"/>
+
+        <!-- Notification group for analysis results -->
+        <notificationGroup
+                id="Latency Analyzer"
+                displayType="BALLOON"
+                isLogByDefault="true"/>
+    </extensions>
+
+    <actions>
+        <action
+                id="LatencyAnalyzer.AnalyzeMethod"
+                class="com.kamini.latencyanalyzer.actions.AnalyzeLatencyAction"
+                text="⚡ Analyze Latency Budget"
+                description="Estimate latency budget for the current method and get AI optimization suggestions">
+
+            <!-- Top of editor right-click menu -->
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+
+            <!-- Top menu bar → Analyze menu -->
+            <add-to-group group-id="AnalyzeMenu" anchor="last"/>
+
+            <keyboard-shortcut
+                    keymap="$default"
+                    first-keystroke="shift ctrl alt L"/>
+        </action>
+    </actions>
+
+</idea-plugin>
+
