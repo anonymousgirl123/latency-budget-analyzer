@@ -75,7 +75,7 @@ Optionally connects to **any HTTP metrics backend** (companion Go microservice, 
 ## Option 3 — Build from source
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/latency-analyzer-plugin
+git clone https://github.com/anonymousgirl123/latency-analyzer-plugin
 cd latency-analyzer-plugin
 ./gradlew buildPlugin
 
@@ -577,7 +577,7 @@ The companion Go microservice is the **easiest way to get real p99 data** if you
 ### Step 1 — Start the Latency Intelligence Platform
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/latency-intelligence
+git clone https://github.com/anonymousgirl123/latency-intelligence
 cd latency-intelligence/docker
 
 podman compose up --build
